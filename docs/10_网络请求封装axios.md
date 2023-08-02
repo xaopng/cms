@@ -1,0 +1,2 @@
+- 安装axios => npm install axios
+- 封装 => [index.ts](..\src\services\request\index.ts)

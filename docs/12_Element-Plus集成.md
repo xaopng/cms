@@ -1,0 +1,4 @@
+- 集成方案：
+- 安装：[https://element-plus.gitee.io/zh-CN/guide/installation.html](https://element-plus.gitee.io/zh-CN/guide/installation.html)
+- 导入：[https://element-plus.gitee.io/zh-CN/guide/quickstart.html](https://element-plus.gitee.io/zh-CN/guide/quickstart.html)
+- 图标引入：[https://element-plus.gitee.io/en-US/component/icon.html](https://element-plus.gitee.io/en-US/component/icon.html)
