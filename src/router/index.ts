@@ -47,7 +47,6 @@ router.beforeEach((to, from) => {
   }
   // 进入/main时，默认显示第一项菜单的页面
   if (to.path === '/main') {
-    console.log('firstMenu', firstMenu)
     return firstMenu?.url
   }
 })

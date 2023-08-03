@@ -1,11 +1,11 @@
 <template>
   <div class="content">
     <div class="header">
-      <h3 class="title">用户列表</h3>
-      <el-button type="primary" @click="handleNewBtnClick">新建用户</el-button>
+      <h3 class="title">部门列表</h3>
+      <el-button type="primary" @click="handleNewBtnClick">新建部门</el-button>
     </div>
     <div class="table">
-      <el-table border :data="userList">
+      <el-table border :data="pageList">
         <el-table-column align="center" width="40px" type="selection" />
         <el-table-column
           align="center"
@@ -16,32 +16,21 @@
         <el-table-column
           align="center"
           width="120px"
-          label="用户名"
+          label="部门名称"
           prop="name"
         />
         <el-table-column
           align="center"
           width="100px"
-          label="真实姓名"
-          prop="realname"
+          label="部门领导"
+          prop="leader"
         />
         <el-table-column
           align="center"
           width="150px"
-          label="手机号码"
-          prop="cellphone"
+          label="上级部门"
+          prop="parentId"
         />
-        <el-table-column align="center" width="60px" label="状态" prop="enable">
-          <template #default="scope">
-            <el-button
-              size="small"
-              :type="scope.row.enable ? 'success' : 'danger'"
-              plain
-            >
-              {{ scope.row.enable ? '启用' : '禁用' }}
-            </el-button>
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="创建时间" prop="createAt">
           <template #default="scope">
             {{ formatUTC(scope.row.createAt) }}
@@ -82,7 +71,7 @@
         :page-sizes="[10, 20, 30]"
         size="small"
         layout="sizes, prev, pager, next, jumper, total"
-        :total="userListTotalCount"
+        :total="pageListTotalCount"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -102,19 +91,19 @@ const emit = defineEmits(['newClick', 'editClick'])
 const systemStore = useSystemStore()
 const currentPage = ref(1)
 const pageSize = ref(10)
-fetchUserListData()
-// 展示用户数据
-const { userList, userListTotalCount } = storeToRefs(systemStore)
+fetchPageListData()
+// 展示页面数据
+const { pageList, pageListTotalCount } = storeToRefs(systemStore)
 // 分页相关数据
 
 function handleCurrentChange() {
-  fetchUserListData()
+  fetchPageListData()
 }
 function handleSizeChange() {
-  fetchUserListData()
+  fetchPageListData()
 }
-// 定义函数,用于请求用户数据
-function fetchUserListData(queryInfo: any = {}) {
+// 定义函数,用于请求页面数据
+function fetchPageListData(queryInfo: any = {}) {
   // 获取size/offset
   const size = pageSize.value
   const offset = (currentPage.value - 1) * size
@@ -127,23 +116,23 @@ function fetchUserListData(queryInfo: any = {}) {
   const info = { ...pageInfo, ...queryInfo }
 
   // 发送网络请求
-  systemStore.postUserListAction(info)
+  systemStore.postPageListDataAction('department', info)
 }
 // 将函数暴露出去
 defineExpose({
-  fetchUserListData
+  fetchPageListData
 })
 
-// 新建/删除/编辑用户操作
+// 新建/删除/编辑页面数据操作
 function handleDeleteBtnClick(id: number) {
   // 调用systemStore中的删除方法
-  systemStore.deleteUserByIdAction(id)
+  systemStore.deletePageDataByIdAction('department', id)
 }
 function handleNewBtnClick() {
   emit('newClick')
 }
 
-function handleEditBtnClick(itemData) {
+function handleEditBtnClick(itemData: any) {
   emit('editClick', itemData)
 }
 </script>

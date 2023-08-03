@@ -7,6 +7,7 @@
     <user-content
       ref="userContentRef"
       @new-click="handleNewClick"
+      @edit-click="handleEditClick"
     ></user-content>
     <user-modal ref="userModalRef"></user-modal>
   </div>
@@ -26,10 +27,13 @@ function handleResetClick() {
   userContentRef.value?.fetchUserListData()
 }
 
-// 新建用户操作
+// 新建/编辑用户操作
 const userModalRef = ref<InstanceType<typeof UserModal>>()
 function handleNewClick() {
   userModalRef.value?.setDialogVisible()
+}
+function handleEditClick(itemData) {
+  userModalRef.value?.setDialogVisible(false, itemData)
 }
 </script>
 

@@ -2,55 +2,23 @@
   <div class="modal">
     <el-dialog
       v-model="dialogVisible"
-      :title="isNewRef ? '新建用户' : '编辑用户'"
+      :title="isNewRef ? '新建部门' : '编辑部门'"
       width="30%"
       destroy-on-close
       center
     >
       <div class="form">
         <el-form :model="formData" size="large" ref="formRef">
-          <el-form-item label="用户名" label-width="80px" prop="name">
-            <el-input v-model="formData.name" placeholder="请输入用户名" />
+          <el-form-item label="部门名称" label-width="80px" prop="name">
+            <el-input v-model="formData.name" placeholder="请输入部门名称" />
           </el-form-item>
-          <el-form-item label="真实姓名" label-width="80px">
-            <el-input
-              v-model="formData.realname"
-              placeholder="请输入真实姓名"
-            />
+          <el-form-item label="部门领导" label-width="80px">
+            <el-input v-model="formData.leader" placeholder="请输入部门领导" />
           </el-form-item>
-          <el-form-item
-            v-if="isNewRef"
-            label="密码"
-            label-width="80px"
-            prop="realname"
-          >
-            <el-input
-              v-model="formData.password"
-              placeholder="请输入密码"
-              show-password
-            />
-          </el-form-item>
-          <el-form-item label="手机号码" label-width="80px" prop="cellphone">
-            <el-input
-              v-model="formData.cellphone"
-              placeholder="请输入手机号码"
-            />
-          </el-form-item>
-          <el-form-item label="角色" label-width="80px" prop="roleId">
+          <el-form-item label="上级部门" label-width="80px" prop="parentId">
             <el-select
-              v-model="formData.roleId"
-              placeholder="请选择角色"
-              style="width: 100%"
-            >
-              <template v-for="item in entireRoles" :key="item.id">
-                <el-option :label="item.name" :value="item.id"></el-option>
-              </template>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="部门" label-width="80px" prop="departmentId">
-            <el-select
-              v-model="formData.departmentId"
-              placeholder="请选择部门"
+              v-model="formData.parentId"
+              placeholder="请选择上级部门"
               style="width: 100%"
             >
               <template v-for="item in entireDepartments" :key="item.id">
@@ -81,11 +49,8 @@ import { ref, reactive } from 'vue'
 
 const formData = reactive<any>({
   name: '',
-  realname: '',
-  password: '',
-  cellphone: '',
-  roleId: '',
-  departmentId: ''
+  leader: '',
+  parentId: ''
 })
 
 // 定义内部属性
@@ -93,7 +58,7 @@ const dialogVisible = ref(false)
 const isNewRef = ref(true)
 const editData = ref()
 // 定义设置 dialogVisible 的方法
-function setDialogVisible(isNew: boolean = true, itemData: any) {
+function setDialogVisible(isNew: boolean = true, itemData: any = {}) {
   dialogVisible.value = true
   isNewRef.value = isNew
   if (!isNew) {
@@ -108,7 +73,7 @@ function setDialogVisible(isNew: boolean = true, itemData: any) {
 // 获取role/department数据
 const mainStroe = useMainStore()
 const systemStore = useSystemStore()
-const { entireRoles, entireDepartments } = storeToRefs(mainStroe)
+const { entireDepartments } = storeToRefs(mainStroe)
 
 // 新建/编辑用户逻辑
 const formRef = ref<InstanceType<typeof ElForm>>()
@@ -116,10 +81,10 @@ function handleConfirmClick() {
   // 隐藏modal
   dialogVisible.value = false
   if (!isNewRef.value && editData.value) {
-    systemStore.editUserDataAction(editData.value.id, formData)
+    systemStore.editPageDataAction('department', editData.value.id, formData)
   } else {
     // 发送请求
-    systemStore.newUserDataAction(formData)
+    systemStore.newPageDataAction('department', formData)
   }
   // 重置数据
   for (const key in formData) {
